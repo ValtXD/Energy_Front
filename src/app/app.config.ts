@@ -1,9 +1,8 @@
-import { ApplicationConfig, provideZoneChangeDetection } from '@angular/core';
+import { Routes } from '@angular/router';
 import { provideRouter } from '@angular/router';
+import { AparelhosComponent } from './pages/aparelhos/aparelhos.component';
 
-import { routes } from './app.routes';
-import { provideClientHydration, withEventReplay } from '@angular/platform-browser';
-
-export const appConfig: ApplicationConfig = {
-  providers: [provideZoneChangeDetection({ eventCoalescing: true }), provideRouter(routes), provideClientHydration(withEventReplay())]
-};
+export const routes: Routes = [
+  { path: '', component: AparelhosComponent },
+  { path: '**', redirectTo: '' }
+];

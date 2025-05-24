@@ -1,0 +1,171 @@
+<!-- Formulário de cadastro -->
+<div>
+  <h2>Adicionar Aparelho</h2>
+  <form [formGroup]="aparelhoForm" (ngSubmit)="adicionarAparelho()">
+    <div>
+      <label for="nome">Nome:</label>
+      <input id="nome" formControlName="nome" required />
+    </div>
+
+    <div>
+      <label for="potencia_watts">Potência (Watts):</label>
+      <input
+        id="potencia_watts"
+        formControlName="potencia_watts"
+        type="number"
+        required
+      />
+    </div>
+
+    <div>
+      <label for="tempo_uso_diario_horas">Tempo de uso diário (Horas):</label>
+      <input
+        id="tempo_uso_diario_horas"
+        formControlName="tempo_uso_diario_horas"
+        type="number"
+        required
+      />
+    </div>
+
+    <div>
+      <label for="quantidade">Quantidade:</label>
+      <input id="quantidade" formControlName="quantidade" type="number" required />
+    </div>
+
+    <div>
+      <label>Ambiente:</label>
+      <select formControlName="ambiente">
+        <option *ngFor="let ambiente of ambientes" [value]="ambiente.id">
+          {{ ambiente.nome }}
+        </option>
+      </select>
+    </div>
+
+    <div>
+      <label for="estado">Estado:</label>
+      <select id="estado" formControlName="estado" required>
+        <option *ngFor="let estado of estados" [value]="estado.id">
+          {{ estado.nome }}
+        </option>
+      </select>
+    </div>
+
+    <div>
+      <label for="bandeira">Bandeira:</label>
+      <select id="bandeira" formControlName="bandeira" required>
+        <option *ngFor="let bandeira of bandeiras" [value]="bandeira.id">
+          {{ bandeira.cor_display }}
+        </option>
+      </select>
+    </div>
+
+    <button type="submit" [disabled]="!aparelhoForm.valid">Adicionar</button>
+  </form>
+</div>
+
+<!-- Filtros simplificados -->
+<div class="filtros-container">
+  <h3>Filtros de Busca</h3>
+
+  <div>
+    <label>Nome:</label>
+    <input
+      type="text"
+      placeholder="Filtrar por nome"
+      [(ngModel)]="filtroNome"
+      name="filtroNome"
+    />
+  </div>
+
+  <div>
+    <label>Estado:</label>
+    <select [(ngModel)]="filtroEstado" name="filtroEstado">
+      <option value="">Todos os estados</option>
+      <option *ngFor="let estado of estados" [value]="estado.id">
+        {{ estado.nome }}
+      </option>
+    </select>
+  </div>
+
+  <div>
+    <label>Ambiente:</label>
+    <select [(ngModel)]="filtroAmbiente" name="filtroAmbiente">
+      <option value="">Todos os ambientes</option>
+      <option *ngFor="let ambiente of ambientes" [value]="ambiente.id">
+        {{ ambiente.nome }}
+      </option>
+    </select>
+  </div>
+
+  <div class="botoes-filtro">
+    <button type="button" (click)="buscar()">Buscar</button>
+    <button type="button" (click)="limparFiltros()">Limpar Filtros</button>
+  </div>
+</div>
+
+<hr />
+
+<!-- Lista de aparelhos -->
+<ul class="aparelhos-lista">
+  <li *ngFor="let aparelho of aparelhos">
+    <div class="info-aparelho">
+      {{ aparelho.nome }} - {{ aparelho.potencia_watts }}W -
+      Estado: {{ aparelho.estado?.nome }} -
+      Ambiente: {{ aparelho.ambiente?.nome }} -
+      Bandeira: {{ aparelho.bandeira?.cor_display }}
+    </div>
+    <div>
+      <button (click)="editarAparelho(aparelho)">Editar</button>
+      <button class="deletar" (click)="deletarAparelho(aparelho.id)">Excluir</button>
+    </div>
+  </li>
+</ul>
+
+<!-- Modal de edição -->
+<div *ngIf="editando" class="modal">
+  <div class="modal-content">
+    <h2>Editar Aparelho</h2>
+    <form [formGroup]="edicaoForm" (ngSubmit)="salvarEdicao()">
+      <input
+        placeholder="Nome"
+        formControlName="nome"
+        required
+        type="text"
+      />
+      <input
+        placeholder="Potência (W)"
+        type="number"
+        formControlName="potencia_watts"
+        required
+        min="1"
+      />
+      <input
+        placeholder="Uso diário (h)"
+        type="number"
+        formControlName="tempo_uso_diario_horas"
+        required
+        min="1"
+      />
+      <input
+        placeholder="Quantidade"
+        type="number"
+        formControlName="quantidade"
+        required
+        min="1"
+      />
+      <select formControlName="ambiente" required>
+        <option *ngFor="let a of ambientes" [value]="a.id">{{ a.nome }}</option>
+      </select>
+      <select formControlName="estado" required>
+        <option *ngFor="let e of estados" [value]="e.id">{{ e.nome }}</option>
+      </select>
+      <select formControlName="bandeira" required>
+        <option *ngFor="let b of bandeiras" [value]="b.id">{{ b.cor_display }}</option>
+      </select>
+      <div class="modal-buttons">
+        <button type="button" (click)="cancelarEdicao()">Cancelar</button>
+        <button type="submit" [disabled]="!edicaoForm.valid">Salvar</button>
+      </div>
+    </form>
+  </div>
+</div>
